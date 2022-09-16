@@ -11,12 +11,16 @@ const userController = {
         if (!req.body.mobile) {
             return res.status(400).send('mobile no require')
         }
+        if(!req.body.password){
+            return res.status(400).send('password require') 
+        }
 
 
         const _result = await User.create({
             name: req.body.name,
             email: req.body.email,
-            mobile: req.body.mobile
+            mobile: req.body.mobile,
+            password: req.body.password
         })
 
         res.status(200).send('user signup sucessfuly')
