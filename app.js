@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const apiroutes = require('./routes')
@@ -7,9 +8,10 @@ const app = express();
 const port = 7000;
 
 app.use(cors());
+app.use(bodyParser.json())
 const connectToDB = async () => {
     try {
-        await mongoose.connect('mongodb+srv://admin:jVHiJLkct5eGonxs@todoapp.ysdlh3a.mongodb.net/?retryWrites=true&w=majority');
+        await mongoose.connect('');
         console.log('connected to db');
     } catch (error) {
         console.log(error)

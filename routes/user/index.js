@@ -8,7 +8,8 @@ router.use((req, res, next) => {
   next()
 })
 
-router.get('/signup', userController.signUp),
+router.post('/signup', userController.signUp),
+router.post('/signIn', userController.signIn),
 router.get('/userApi', userController.userApi)
 
 
