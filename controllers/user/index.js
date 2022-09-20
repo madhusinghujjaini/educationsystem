@@ -1,50 +1,60 @@
-const user = require('../../models/user')
-const User = require('../../models/user')
-const becrypt = require('bcryptjs')
+const user = require('../../models/user');
+const User = require('../../models/user');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const jwtSecret = "";
+
 const userController = {
     signUp: async (req, res) => {
+        try {
+            const { name, email, mobile, password } = req.body;
 
-        if (!req.body.name) {
-            return res.status(400).send(' name require')
-        }
-        if (!req.body.email) {
-            return res.status(400).send('email require')
-        }
-        if (!req.body.mobile) {
-            return res.status(400).send('mobile no require')
-        }
-        if (!req.body.password) {
-            return res.status(400).send('password require')
-        }
+            let _password = req.body.password;
+            const salt = await bcrypt.genSalt(10);
+            _password = await bcrypt.hash(_password, salt);
 
-        let _password = req.body.password;
-        const salt  = becrypt.genSaltSync(10);
-        _password = becrypt.hashSync(_password , salt);
+            console.log(_password);
+            const _result = await User.create({
+                name,
+                email,
+                mobile,
+                password: _password
+            })
 
-        console.log(_password);
-        const _result = await User.create({
-            name: req.body.name,
-            email: req.body.email,
-            mobile: req.body.mobile,
-            password: _password
-        })
+            const payload = {
+                user: {
+                    id: _result._id
+                }
+            };
 
-        res.status(200).send('user signup sucessfuly')
+            const token = await jwt.sign(payload, jwtSecret, { expiresIn: 240000 });
+
+            res.status(200).send({
+                message: "registered Successfully",
+                token
+            })
+        } catch (error) {
+            console.log(error.message)
+            return res.status(400).send({ error: error.message })
+        }
     },
     signIn: async (req, res) => {
 
-        if (!req.body.email) {
-            return res.status(400).send('Please enter the email require')
-        }
-        if (!req.body.password) {
-            return res.status(400).send('Please enter the password')
-        }
+        const { email, password } = req.body;
+        try {
+            const user = await User.findOne({ email: req.body.email });
+            if (!user) {
+                return res.status(400).send({ message: 'user doesnot exist' })
+            }
+            const passwordIsCorrect = await bcrypt.compare(password, user.password);
+            if (!passwordIsCorrect) {
+                return res.status(400).send({ message: 'user email or password incorrect' })
+            }
 
-        const _user = await User.findOne({ email: req.body.email });
-        if (_user.password == req.body.password) {
-            return res.status(200).send('user loged in')
-        }else{
-            return res.status(400).send('email id or password is incorrect');
+            res.status(200).send({ message: 'login sucessfully' });
+        } catch (error) {
+            console.log(error.message)
+            return res.status(400).send({ error: error.message });
         }
     },
     userApi: (req, res) => {
