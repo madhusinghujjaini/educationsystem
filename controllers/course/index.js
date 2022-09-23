@@ -30,17 +30,26 @@ const courseController = {
 
     UpdateCourse: async (req, res) => {
         try {
-            const { id, title, description, duration, price, discount, instructor, videos } = req.body;
-            const course = await Course.findById(id);
-            course.title = title;
-            course.description = description;
-            course.duration = duration;
-            course.price = price;
-            course.discount = discount;
-            course.instructor = instructor;
-            course.videos = videos
+            const { id, title, description, duration, price, discount } = req.body;
+            // const course = await Course.findById(id);
+            // course.title = title;
+            // course.description = description;
+            // course.duration = duration;
+            // course.price = price;
+            // course.discount = discount;
+            // course.instructor = instructor;
+            // course.videos = videos
 
-            await course.save();
+            // await course.save();
+
+            // using set 
+            const course = await Course.findByIdAndUpdate(id,{$set:{
+                title,
+                description,
+                duration,
+                discount,
+                price
+            }});
             res.status(200).send({
                 status: true,
                 message: "Course updated successfully"
@@ -68,7 +77,8 @@ const courseController = {
     },
     getCourseById: async (req, res) => {
         try {
-            const { id } = req.body;
+            
+            const { id } = req.query;
             const course = await Course.findById(id);
             res.status(200).send({ data: course })
 
@@ -81,6 +91,7 @@ const courseController = {
     },
     deleteCourse: async (req, res) => {
         try {
+            
             const { id } = req.body;
             const course = await Course.findById(id);
             await course.deleteOne();
