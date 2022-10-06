@@ -22,7 +22,7 @@ const assessmentSchema = new Schema({
     questions:[{
 
         question: {
-            type: this.schema.types.objectId,
+            type: Schema.Types.ObjectId,
             ref: 'question'
         },
        
@@ -40,4 +40,4 @@ updatedAt:{
 
 });
 
-module.exports = Assessmet = mongoose.model('assessment', assessmentSchema);
+module.exports = mongoose.model('assessment', assessmentSchema);
