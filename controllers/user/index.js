@@ -2,7 +2,7 @@ const user = require('../../models/user');
 const User = require('../../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const jwtSecret = "";
+const config = require('../../config')
 
 const userController = {
     signUp: async (req, res) => {
@@ -26,8 +26,7 @@ const userController = {
                     id: _result._id
                 }
             };
-
-            const token = await jwt.sign(payload, jwtSecret, { expiresIn: 240000 });
+            const token = await jwt.sign(payload, config.JWT_SECRET, { expiresIn: 240000 });
 
             res.status(200).send({
                 message: "registered Successfully",
@@ -60,6 +59,8 @@ const userController = {
     userApi: (req, res) => {
         res.status(200).send('user signup sucessfuly')
     }
+
+    
 }
 
 module.exports = userController;

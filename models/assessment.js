@@ -8,35 +8,25 @@ const assessmentSchema = new Schema({
     },
     description: {
         type: String,
-        require: true,
-        
-
+        require: true
     },
     negativeMarking: {
-        type: Boolean,
-        
-        
-   
-        
-    } ,
-    questions:[{
-
+        type: Boolean
+    },
+    questions: [{
         question: {
             type: Schema.Types.ObjectId,
             ref: 'question'
-        },
-       
-
-
-}],
-createdAt:{
-    type: Date,
-    default: Date.now()
-},
-updatedAt:{
-    type: Date,
-    default: Date.now()
-}
+        }
+    }],
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now()
+    }
 
 });
 

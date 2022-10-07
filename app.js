@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const apiroutes = require('./routes')
+const config = require('./config')
 
 const app = express();
 const port = 7000;
@@ -11,7 +12,7 @@ app.use(cors());
 app.use(bodyParser.json())
 const connectToDB = async () => {
     try {
-        await mongoose.connect('');
+        await mongoose.connect(config.DB_URL);
         console.log('connected to db');
     } catch (error) {
         
